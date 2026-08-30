@@ -90,11 +90,15 @@ export default function SendMessage() {
       } else if (response.data?.text) {
         setSuggestedMessages(response.data.text);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching messages:', error);
+      const errorMessage =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        'Failed to fetch AI suggested questions.';
       toast({
-        title: 'Error',
-        description: 'Failed to fetch AI suggested questions.',
+        title: 'AI Suggestion Error',
+        description: errorMessage,
         variant: 'destructive',
       });
     } finally {
