@@ -31,6 +31,9 @@ function UserDashboard() {
 
   const form = useForm({
     resolver: zodResolver(AcceptMessageSchema),
+    defaultValues: {
+      acceptMessages: false,
+    },
   });
 
   const { register, watch, setValue } = form;
@@ -95,11 +98,12 @@ function UserDashboard() {
 
   // Handle switch change
   const handleSwitchChange = async () => {
+    const newStatus = !acceptMessages;
     try {
       const response = await axios.post<ApiResponse>('/api/accept-message', {
-        acceptMessages: !acceptMessages,
+        acceptMessages: newStatus,
       });
-      setValue('acceptMessages', !acceptMessages);
+      setValue('acceptMessages', newStatus);
       toast({
         title: response.data.message,
         variant: 'default',
@@ -153,7 +157,7 @@ function UserDashboard() {
       <div className="mb-4">
         <Switch
           {...register('acceptMessages')}
-          checked={acceptMessages}
+          checked={!!acceptMessages}
           onCheckedChange={handleSwitchChange}
           disabled={isSwitchLoading}
         />

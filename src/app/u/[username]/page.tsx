@@ -85,10 +85,16 @@ export default function SendMessage() {
     setIsSuggestLoading(true);
     try {
       const response = await axios.post('/api/suggest-message');
-      if (typeof response.data === 'string') {
-        setSuggestedMessages(response.data);
-      } else if (response.data?.text) {
-        setSuggestedMessages(response.data.text);
+      const text = typeof response.data === 'string' ? response.data : response.data?.text;
+      if (text) {
+        setSuggestedMessages(text);
+      }
+      if (response.data?.warning) {
+        toast({
+          title: 'AI Key Notice',
+          description: response.data.warning,
+          variant: 'destructive',
+        });
       }
     } catch (error: any) {
       console.error('Error fetching messages:', error);
